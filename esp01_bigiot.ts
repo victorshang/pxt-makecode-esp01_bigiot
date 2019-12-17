@@ -90,9 +90,13 @@ namespace esp01 {
     //% block="从字符串 %value 中获取命令词"
     //获取命令词
     export function GetCMD(value: string): string {
-        let len = value.indexOf("\",\"T\"") - value.indexOf("\"C\":\"")
-        if (len > 0) return value.substr(value.indexOf("\"C\":\"") + 5, len - 5)
-        else return ""
+        let begin = value.indexOf("\",\"T\"")
+        let end = value.indexOf("\"C\":\"")
+        if (begin != -1 && end != -1) {
+            return value.substr(end + 5, end - begin - 5)
+        }
+        else
+            return ""
     }
 
 }
