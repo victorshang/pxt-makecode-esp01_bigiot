@@ -1,6 +1,6 @@
 {
     "name": "pxt-makecode-esp01_bigiot",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "description": "",
     "dependencies": {
         "core": "*",
