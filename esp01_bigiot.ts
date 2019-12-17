@@ -4,7 +4,7 @@ namespace esp01 {
     function SerialLineWrite(txt: string): void {
         serial.writeString(txt + "\r\n")
     }
-    //% block="阻断运行，直到读取到 %txt"
+    //% block="阻断运行，直到读取到 %txt" blockExternalInputs=true
     //等待出现字符串
     function WaitFor(txt: string): void {
         while (serial.readString().indexOf(txt) == -1) {
