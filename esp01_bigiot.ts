@@ -75,7 +75,6 @@ namespace esp01 {
             basic.showString("checkin")
         }
         basic.pause(500)
-        WaitFor("OK")
     }
     //% block="更新数据|设备ID %DID 接口1ID %IID1 接口1值 %value1" blockExternalInputs=true
     //更新数据1
