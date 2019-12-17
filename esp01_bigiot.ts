@@ -6,7 +6,7 @@ namespace esp01 {
     }
     //% block="阻断运行，直到读取到 %txt" blockExternalInputs=true
     //等待出现字符串
-    function WaitFor(txt: string): void {
+    export function WaitFor(txt: string): void {
         while (serial.readString().indexOf(txt) == -1) {
             basic.pause(100)
         }
