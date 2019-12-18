@@ -104,12 +104,4 @@ namespace esp01 {
         else
             return ""
     }
-    /**
-       * Registers code to run when the cmd receives a number.
-    */
-    //% block="on cmd received"
-    export function onReceivedNumber(cb: (receivedString: string) => void) {
-        
-        onReceivedCmdHandler = cb;
-    }
 }
