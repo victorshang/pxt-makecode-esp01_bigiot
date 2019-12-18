@@ -35,7 +35,7 @@ namespace esp01 {
     export function LinkWifi(SSID: string, Pwd: string): void {
         basic.showNumber(0)
         serial.writeString("+++")
-        basic.pause(1000)
+        basic.pause(500)
         basic.showNumber(1)
         SerialLineWrite("AT+RESTORE")
         basic.pause(1000)
