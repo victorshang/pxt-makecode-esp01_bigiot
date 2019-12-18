@@ -1,7 +1,7 @@
 // 在此处添加您的代码
 //% weight=20 color=#2233DD icon="\uf067" block="ESP01+Bigiot"
 namespace esp01 {
-    let checkin=false
+    let checkin = false
     let onReceivedCmdHandler: (receivedString: string) => void;
 
     function SerialLineWrite(txt: string): void {
@@ -70,7 +70,7 @@ namespace esp01 {
         }
         checkin = false
         basic.pause(500)
-        
+
     }
     //% block="设备登录|设备ID %DID APIKey %APIKey 显示提示 %showdebug" blockExternalInputs=true
     //设备登录
