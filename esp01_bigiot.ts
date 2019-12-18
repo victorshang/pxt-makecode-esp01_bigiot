@@ -1,6 +1,9 @@
 // 在此处添加您的代码
 //% weight=20 color=#2233DD icon="\uf067" block="ESP01+Bigiot"
 namespace esp01 {
+    let checkin=false
+    let onReceivedCmdHandler: (receivedString: string) => void;
+
     function SerialLineWrite(txt: string): void {
         serial.writeString(txt + "\r\n")
     }
@@ -65,7 +68,9 @@ namespace esp01 {
         if (showdebug) {
             basic.showString("checkout")
         }
+        checkin = false
         basic.pause(500)
+        
     }
     //% block="设备登录|设备ID %DID APIKey %APIKey 显示提示 %showdebug" blockExternalInputs=true
     //设备登录
@@ -74,6 +79,7 @@ namespace esp01 {
         if (showdebug) {
             basic.showString("checkin")
         }
+        checkin = true
         basic.pause(500)
     }
     //% block="更新数据|设备ID %DID 接口1ID %IID1 接口1值 %value1" blockExternalInputs=true
@@ -98,5 +104,12 @@ namespace esp01 {
         else
             return ""
     }
-
+    /**
+       * Registers code to run when the cmd receives a number.
+    */
+    //% block="on cmd received"
+    export function onReceivedNumber(cb: (receivedString: string) => void) {
+        
+        onReceivedCmdHandler = cb;
+    }
 }
