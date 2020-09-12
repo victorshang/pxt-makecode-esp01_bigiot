@@ -3,8 +3,8 @@
  */
 //% color=#de0423 icon="\uf1ee" block="ESP8266"
 namespace ESP8266 {
-        let wifi_connected = false
-        let internet_connected = false
+    let wifi_connected = false
+    let server_connected = false
     // 发送以//r//n结尾的命令
     function sendAT(command: string, wait: number = 100) {
         serial.writeString(command + "\u000D\u000A")
@@ -43,14 +43,13 @@ namespace ESP8266 {
     /**
     * 初始化 ESP8266 模块，使用穿透模式连接到Wifi
     */
-    //% block="Initi ESP8266|RX (Tx of micro:bit) %tx|TX (Rx of micro:bit) %rx|Baud rate %baudrate|Wifi SSID = %ssid|Wifi PW = %pw"
+    //% block="初始化 ESP8266|RX (Tx of micro:bit) %tx|TX (Rx of micro:bit) %rx|波特率为 %baudrate|SSID号 = %ssid|密码 = %pw"
     //% tx.defl=SerialPin.P0
     //% rx.defl=SerialPin.P1
     //% ssid.defl=your_ssid
     //% pw.defl=your_pw
     export function connectWifi(tx: SerialPin, rx: SerialPin, baudrate: BaudRate, ssid: string, pw: string) {
         wifi_connected = false
-        internet_connected = false
         serial.redirect(
             tx,
             rx,
@@ -63,6 +62,18 @@ namespace ESP8266 {
 		sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"", 0) // connect to Wifi router
         wifi_connected = waitResponse("OK")
         basic.pause(100)
+    }
+    /**
+    * 连接到服务器
+    */
+    //% block="连接到服务器|域名或IP地址 = %url|端口 = %port"
+    //% url.defl=ServerIP
+    //% port.defl=80
+    export function connectToBigiotServer(url: string, port: number) {
+        if(wifi_connected){
+            sendAT("AT+CIPSTART=\"TCP\",\""+url+"\","+port)
+            server_connected = waitResponse("WELCOME TO BIGIOT")
+        }
     }
 
    
@@ -84,11 +95,11 @@ namespace ESP8266 {
     }
 
     /**
-    * Check if ESP8266 successfully connected to ThingSpeak
+    *检查ESP8266是否连接到了服务器
     */
-    //% block="ThingSpeak connected ?"
+    //% block="Server connected ?"
     export function isInterneConnected() {
-        return internet_connected
+        return server_connected
     }
 
 }
