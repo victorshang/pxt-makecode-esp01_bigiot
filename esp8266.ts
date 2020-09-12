@@ -56,6 +56,7 @@ namespace ESP8266 {
             rx,
             baudrate
         )
+        serial.setRxBufferSize(128)
 		sendAT("AT+RESTORE", 1000) // 恢复出厂模式
         sendAT("AT+CWMODE=1") // 设置为STA模式
 		if(waitResponse("OK")){
