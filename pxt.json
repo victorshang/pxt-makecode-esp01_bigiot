@@ -9,12 +9,15 @@
     "files": [
         "README.md",
         "main.ts",
-        "esp01_bigiot.ts"
+        "esp01_bigiot.ts",
+        "esp8266.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "public": false,
-    "preferredEditor": "tsprj",
-    "installedVersion": "workspace:07fb6552-66b4-486f-8f7f-092636faacf0"
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "tsprj"
 }
