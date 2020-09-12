@@ -3,8 +3,8 @@
  */
 //% color=#de0423 icon="\uf1ee" block="ESP8266"
 namespace ESP8266 {
-    let wifi_connected = false
-    let server_connected = false
+    let wifi_connected:boolean = false
+    let server_connected:boolean = false
     // 发送以//r//n结尾的命令
     function sendAT(command: string, wait: number = 100) {
         serial.writeString(command + "\u000D\u000A")
@@ -59,7 +59,7 @@ namespace ESP8266 {
 		sendAT("AT+RESTORE", 2000) // 恢复出厂模式
         sendAT("AT+CWMODE=1",500) // 设置为STA模式
 		sendAT("AT+RST", 1000) // 重启
-		sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"", 0) // connect to Wifi router
+		sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"", 0) // 连接到WIFI
         wifi_connected = waitResponse("OK")
         basic.pause(100)
     }
