@@ -1,7 +1,7 @@
 /**
  * MakeCode extension for ESP8266 Wifi modules 
  */
-//% color=#00f35b icon="\uf1ed" block="ESP8266"
+//% color=#de0423 icon="\uf1ee" block="ESP8266"
 namespace ESP8266 {
         let wifi_connected = false
         let internet_connected = false
@@ -11,7 +11,7 @@ namespace ESP8266 {
         basic.pause(wait)
     }
 	
-    // 发送以 命令
+    // 发送命令
     function sendCMD(command: string, wait: number = 100) {
         serial.writeString(command)
         basic.pause(wait)
@@ -57,14 +57,10 @@ namespace ESP8266 {
             baudrate
         )
         serial.setRxBufferSize(128)
-		sendAT("AT+RESTORE", 1000) // 恢复出厂模式
-        sendAT("AT+CWMODE=1") // 设置为STA模式
-		if(waitResponse("OK")){
-			basic.showNumber(6)
-		}
-        sendAT("AT+RST", 1000) // 重启
-		
-        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"", 0) // connect to Wifi router
+		sendAT("AT+RESTORE", 2000) // 恢复出厂模式
+        sendAT("AT+CWMODE=1",500) // 设置为STA模式
+		sendAT("AT+RST", 1000) // 重启
+		sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"", 0) // connect to Wifi router
         wifi_connected = waitResponse("OK")
         basic.pause(100)
     }
