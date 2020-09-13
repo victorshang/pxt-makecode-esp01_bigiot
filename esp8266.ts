@@ -15,7 +15,7 @@ let DateTimeFormats=["Ymd","His","Y-m-d","H:i:s","stamp","Y-m-d H:i:s"]
 namespace ESP8266 {
     let listener:boolean=false //监听网站发来命令的信号量
     let last_cmd_successful: boolean =false
-    let serverTime:number=0
+    let serverTime: string=""
     let last_cmd: string =""
     let wifi_connected:boolean = false
     let bigiot_connected:boolean = false
@@ -275,7 +275,7 @@ namespace ESP8266 {
 			//如果返回中有命令词
             let temp_str:string=subStr(serial_str,"\"T\":\"","\"}")
             if (temp_str.compare("")!=0) {
-                serverTime=parseInt(temp_str)
+                serverTime=temp_str
                 result = true
                 break
 			//如超过时长
