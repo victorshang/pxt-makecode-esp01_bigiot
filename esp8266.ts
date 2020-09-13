@@ -267,24 +267,22 @@ namespace ESP8266 {
     function waitforTime(timeout : number=1000): boolean {
         let serial_str: string = ""
         let result: boolean = false 
-        if(listener){
-            let time: number = input.runningTime()
-            while (true) {
-                serial_str += serial.readString()
-			    //取前的200个字符
-                if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
-			    //如果返回中有命令词
-                let temp_str:string=subStr(serial_str,"\"T\":\"","\"}")
-                if (temp_str.compare("")!=0) {
-                    serverTime=parseInt(temp_str)
-                    result = true
-                    break
-			    //如超过时长
-                }
-                if (input.runningTime() - time > timeout) {
-                    basic.showString("t")
-                    break
-                }
+        let time: number = input.runningTime()
+        while (true) {
+            serial_str += serial.readString()
+		    //取前的200个字符
+            if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
+			//如果返回中有命令词
+            let temp_str:string=subStr(serial_str,"\"T\":\"","\"}")
+            if (temp_str.compare("")!=0) {
+                serverTime=parseInt(temp_str)
+                result = true
+                break
+			//如超过时长
+            }
+            if (input.runningTime() - time > timeout) {
+                basic.showString("t")
+                break
             }
         }
         return result
