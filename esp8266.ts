@@ -43,11 +43,11 @@ namespace ESP8266 {
     /**
     * 初始化 ESP8266 模块，使用穿透模式连接到Wifi
     */
-    //% block="初始化 ESP8266|RX (Tx of micro:bit) %tx|TX (Rx of micro:bit) %rx|波特率为 %baudrate|SSID号 = %ssid|密码 = %pw"
+    //% block="初始化 ESP8266|RX (Tx of micro:bit) %tx|TX (Rx of micro:bit) %rx|波特率为 %baudrate|SSID号 %ssid|密码 %pw"
     //% tx.defl=SerialPin.P0
     //% rx.defl=SerialPin.P1
-    //% ssid.defl=your_ssid
-    //% pw.defl=your_pw
+    //% ssid.defl=SSID
+    //% pw.defl=Password
     export function connectWifi(tx: SerialPin, rx: SerialPin, baudrate: BaudRate, ssid: string, pw: string) {
         wifi_connected = false
         serial.redirect(
@@ -83,7 +83,7 @@ namespace ESP8266 {
     /**
     * 读取串口数据，判断是否存在某个特定表示成功字符串，默认等待时间为30s，失败字符串为"ERROR"、"FAIL"
     */
-    //% block="存在表示成功的字符串|字符串 = %waitForWords|超时 = %timeout"
+    //% block="存在表示成功的字符串|字符串 = %waitForWords|超时 %timeout"
     //% waitForWords.defl="string"
     //% timeout.defl=30000
     function waitResponse(waitForWords : string,timeout : number=30000): boolean {
@@ -243,9 +243,9 @@ namespace ESP8266 {
         return last_cmd
     }
     /**
-    * 查询服务器日期时间
+    * 获取服务器日期/时间
     */
-    //% block="查询服务器日期/时间|格式：%format"
+    //% block="获取服务器日期/时间|格式：%format"
     //% format.defl=DateTimeFormat.DateTime
     export function BigiotCheckServerDate(format:DateTimeFormat): void {
         if(listener){
@@ -258,9 +258,9 @@ namespace ESP8266 {
         }
     }
     /**
-    *最近一次查询的服务器时间戳
+    *最近一次获取的服务器时间戳
     */
-    //% block="最近一次查询的服务器时间戳"
+    //% block="最近一次获取的服务器时间戳"
     export function lastServerTime() {
         return serverTime
     }
