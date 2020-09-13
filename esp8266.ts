@@ -60,7 +60,7 @@ namespace ESP8266 {
         sendAT("AT+CWMODE=1",1000) // 设置为STA模式
         last_cmd_successful= waitResponse("OK")
         sendAT("AT+RST", 2000) // 重启
-        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"",0) // 连接到WIFI
+        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"",5000) // 连接到WIFI
         last_cmd_successful= waitResponse("OK")
         wifi_connected =last_cmd_successful
         basic.pause(100)
