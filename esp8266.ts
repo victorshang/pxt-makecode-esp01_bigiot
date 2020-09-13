@@ -57,11 +57,11 @@ namespace ESP8266 {
         )
         serial.setRxBufferSize(128)
 		sendAT("AT+RESTORE", 2000) // 恢复出厂模式
-        sendAT("AT+CWMODE=1") // 设置为STA模式
-        last_cmd_successful=waitResponse("OK")
-		sendAT("AT+RST", 1000) // 重启
-        last_cmd_successful=waitResponse("OK")
-		sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"",0) // 连接到WIFI
+        sendAT("AT+CWMODE=1",1000) // 设置为STA模式
+        last_cmd_successful= waitResponse("OK")
+        sendAT("AT+RST", 2000) // 重启
+        last_cmd_successful= waitResponse("OK")
+        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"",0) // 连接到WIFI
         last_cmd_successful= waitResponse("OK")
         wifi_connected =last_cmd_successful
         basic.pause(100)
