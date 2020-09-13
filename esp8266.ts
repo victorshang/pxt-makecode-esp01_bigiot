@@ -255,8 +255,8 @@ namespace ESP8266 {
     * 查询服务器日期时间
     */
     //% block="查询服务器日期/时间|格式：%format"
-    //% format.defl=DateTimeFormat.Date
-    export function BigiotCheckServerDate(format:string): void {
+    //% format.defl=DateTimeFormat.DateTime
+    export function BigiotCheckServerDate(format:DateTimeFormat): void {
         if(listener){
             listener=false//关闭监听
             let cmd:string="{\"M\":\"time\",\"F\":\""+format+"\"}\n"
