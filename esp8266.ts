@@ -3,14 +3,14 @@
  */
 //% color=#de0423 icon="\uf1ee" block="ESP8266"
 enum DateTimeFormat {
-    DateSimple = "Ymd",   // 日期类型
-    TimeSimple = "His",   //时间类型
-    Date = "Y-m-d", // 日期类型
-    Time = "H:i:s", //时间类型
-    DateTimeStamp="stamp",
-    DateTime="Y-m-d H:i:s",
+    DateSimple = 0,  
+    TimeSimple = 1, 
+    Date = 2, 
+    Time = 3,
+    DateTimeStamp = 4,
+    DateTime = 5
 }
-
+let DateTimeFormats=["Ymd","His","Y-m-d","H:i:s","stamp","Y-m-d H:i:s"]
 
 namespace ESP8266 {
     let listener:boolean=false //监听网站发来命令的信号量
@@ -259,7 +259,7 @@ namespace ESP8266 {
     export function BigiotCheckServerDate(format:DateTimeFormat): void {
         if(listener){
             listener=false//关闭监听
-            let cmd:string="{\"M\":\"time\",\"F\":\""+format+"\"}\n"
+            let cmd:string="{\"M\":\"time\",\"F\":\""+DateTimeFormats[format]+"\"}\n"
             sendAT("AT+CIPSEND="+cmd.length)
             sendCMD(cmd)
             last_cmd_successful=waitforTime(1000)
