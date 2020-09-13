@@ -22,7 +22,7 @@ namespace ESP8266 {
 
     // 发送以//r//n结尾的命令
     function sendAT(command: string, wait: number = 100) {
-        sendCMD(command + "\u000D\u000A")
+        sendCMD(command + "\u000D\u000A",wait)
     }
     // 发送命令
     function sendCMD(command: string, wait: number = 100) {
