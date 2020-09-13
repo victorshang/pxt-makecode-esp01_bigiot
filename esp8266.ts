@@ -91,7 +91,7 @@ namespace ESP8266 {
         let result: boolean = false
         let time: number = input.runningTime()
         while (true) {
-            serial_str = serial.readString()
+            serial_str += serial.readString()
 			//取前200个字符
             if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
             //如果返回中有等待的信息
