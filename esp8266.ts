@@ -2,6 +2,14 @@
  * MakeCode extension for ESP8266 Wifi modules 
  */
 //% color=#de0423 icon="\uf1ee" block="ESP8266"
+declare const enum DateTimeFormat {
+    DateSimple = "Ymd",   // 日期类型
+    TimeSimple = "His",   //时间类型
+    Date = "Y-m-d", // 日期类型
+    Time = "H:i:s", //时间类型
+    DateTimeStamp="stamp",
+    DateTime="Y-m-d H:i:s",
+}
 namespace ESP8266 {
     let listener:boolean=false //监听网站发来命令的信号量
     let last_cmd_successful: boolean =false
@@ -86,16 +94,15 @@ namespace ESP8266 {
             if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
             //如果返回中有等待的信息
             if (serial_str.includes(waitForWords) ) {
-                basic.showNumber(9)
                 result = true
                 break
 			//如失败
             } else if (serial_str.includes("ERROR") || serial_str.includes("FAIL")) {
-                basic.showNumber(8)
+                basic.showString("E")
                 break
             }
             if (input.runningTime() - time > timeout) {
-                basic.showNumber(6)
+                basic.showString("t")
                 break
             }
         }
@@ -114,6 +121,8 @@ namespace ESP8266 {
             bigiot_connected=last_cmd_successful
             //登录后开始监听网站发来的命令
             listener=true
+        }else{
+            basic.showString("u")
         }
     }
     /**
@@ -129,9 +138,16 @@ namespace ESP8266 {
     */
     //% block="发送Bigiot心跳包"
     export function BigiotBeat(): void {
-        let cmd:string="{\"M\":\"beat\"}\n"
-        sendAT("AT+CIPSEND="+cmd.length)
-        sendCMD(cmd)
+        if(listener){
+            listener=false//关闭监听
+            let cmd:string="{\"M\":\"beat\"}\n"
+            sendAT("AT+CIPSEND="+cmd.length)
+            sendCMD(cmd)
+            listener=true//开启监听
+        }else{
+            basic.showString("b")
+        }
+        
     }
      /**
     * Bigiot设备退出登录
@@ -164,12 +180,17 @@ namespace ESP8266 {
     //% block="发送实时数据|设备ID %DID|接口ID %IID|接口值 %value" blockExternalInputs=true
     //更新一项数据
     export function BigiotUpdate1(DID: string, IID: string, value: string): void {
-        listener=false//关闭监听
-        let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID + "\":\"" + value + "\"}}\n" 
-        sendAT("AT+CIPSEND="+cmd.length)
-        sendCMD(cmd)
-        last_cmd_successful=waitResponse("SEND OK",500)
-        listener=true//开启监听
+        if(listener){
+            listener=false//关闭监听
+            let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID + "\":\"" + value + "\"}}\n" 
+            sendAT("AT+CIPSEND="+cmd.length)
+            sendCMD(cmd)
+            last_cmd_successful=waitResponse("SEND OK",500)
+            listener=true//开启监听
+        }else{
+            basic.showString("b")
+        }
+        
     }
     /**
     * Bigiot发送两项实时数据
@@ -177,18 +198,22 @@ namespace ESP8266 {
     //% block="发送实时数据|设备ID %DID|接口1ID %IID1|接口1值 %value1|接口2ID %IID2|接口2值 %value2" blockExternalInputs=true
     //更新两项数据
     export function BigiotUpdate2(DID: string, IID1: string, value1: string, IID2: string, value2: string): void {
-        listener=false//关闭监听
-        let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID1 + "\":\"" + value1 + "\",\"" + IID2 + "\":\"" + value2 + "\"}}\n" 
-        sendAT("AT+CIPSEND="+cmd.length)
-        sendCMD(cmd)
-        last_cmd_successful=waitResponse("SEND OK",500)
-        listener=true//开启监听
+        if(listener){
+            listener=false//关闭监听
+            let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID1 + "\":\"" + value1 + "\",\"" + IID2 + "\":\"" + value2 + "\"}}\n" 
+            sendAT("AT+CIPSEND="+cmd.length)
+            sendCMD(cmd)
+            last_cmd_successful=waitResponse("SEND OK",500)
+            listener=true//开启监听
+        }else{
+            basic.showString("b")
+        }
     }
 
     /**
     * 读取串口数据，判断是否存在Bigiot命令词，默认读取时长为3s
     */
-    //% block="检查Bigiot是否发来命令词|超时 = %timeout"
+    //% block="检查Bigiot是否发来命令|超时:%timeout"
     //% timeout.defl=3000
     export function waitforCommand(timeout : number=3000): boolean {
         let serial_str: string = ""
@@ -208,9 +233,12 @@ namespace ESP8266 {
 			    //如超过时长
                 }
                 if (input.runningTime() - time > timeout) {
+                    basic.showString("t")
                     break
                 }
             }
+        }else{
+            basic.showString("b")
         }
         return result
     }
@@ -222,16 +250,21 @@ namespace ESP8266 {
         return last_cmd
     }
     /**
-    * 查询服务器时间
+    * 查询服务器日期时间
     */
-    //% block="查询服务器时间"
-    export function BigiotCheckServerTime(): void {
-        listener=false//关闭监听
-        let cmd:string="{\"M\":\"time\",\"F\":\"stamp\"}\n"
-        sendAT("AT+CIPSEND="+cmd.length)
-        sendCMD(cmd)
-        last_cmd_successful=waitforTime(1000)
-        listener=true//开启监听
+    //% block="查询服务器日期/时间|格式：%format"
+    //% format.defl=DateTimeFormat.Date
+    export function BigiotCheckServerDate(format:string =DateTimeFormat.Date): void {
+        if(listener){
+            listener=false//关闭监听
+            let cmd:string="{\"M\":\"time\",\"F\":\""+format+"\"}\n"
+            sendAT("AT+CIPSEND="+cmd.length)
+            sendCMD(cmd)
+            last_cmd_successful=waitforTime(1000)
+            listener=true//开启监听
+        }else{
+            basic.showString("b")
+        }
     }
     /**
     *最近一次查询的服务器时间戳
@@ -258,6 +291,7 @@ namespace ESP8266 {
 			    //如超过时长
                 }
                 if (input.runningTime() - time > timeout) {
+                    basic.showString("t")
                     break
                 }
             }
