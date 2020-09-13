@@ -236,7 +236,6 @@ namespace ESP8266 {
 			    //如超过时长
                 }
                 if (input.runningTime() - time > timeout) {
-                    basic.showString("t")
                     break
                 }
             }
