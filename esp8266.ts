@@ -161,7 +161,7 @@ namespace ESP8266 {
         let cmd:string="{\"M\":\"checkout\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
         sendAT("AT+CIPSEND="+cmd.length)
         sendCMD(cmd)
-        last_cmd_successful=waitResponse("checkoutok",2000)
+        last_cmd_successful=waitResponse("checkout",2000)
         listener=true//开启监听
     }
     /**
