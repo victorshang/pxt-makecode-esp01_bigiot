@@ -92,9 +92,10 @@ namespace ESP8266 {
         while (true) {
             serial_str += serial.readString()
 			//取前200个字符
-            if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
+            //if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
             //如果返回中有等待的信息
             if (serial_str.includes(waitForWords) ) {
+               // basic.showString(waitForWords)
                 result = true
                 break
 			//如失败
