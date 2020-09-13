@@ -60,7 +60,8 @@ namespace ESP8266 {
         sendAT("AT+CWMODE=1",1000) // 设置为STA模式
         last_cmd_successful= waitResponse("OK")
         sendAT("AT+RST", 2000) // 重启
-        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"",5000) // 连接到WIFI
+        last_cmd_successful= waitResponse("OK")
+        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"",1000) // 连接到WIFI
         last_cmd_successful= waitResponse("OK")
         wifi_connected =last_cmd_successful
         basic.pause(100)
@@ -90,12 +91,12 @@ namespace ESP8266 {
         let result: boolean = false
         let time: number = input.runningTime()
         while (true) {
-            serial_str += serial.readString()
+            serial_str = serial.readString()
 			//取前200个字符
-            //if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
+            if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
             //如果返回中有等待的信息
             if (serial_str.includes(waitForWords) ) {
-               // basic.showString(waitForWords)
+                basic.pause(500)
                 result = true
                 break
 			//如失败
@@ -118,7 +119,7 @@ namespace ESP8266 {
     //% port.defl=8181
     export function connectToBigiotServer(url: string="www.bigiot.net", port: number=8181) {
         if(wifi_connected){
-            sendAT("AT+CIPSTART=\"TCP\",\""+url+"\","+port)
+            sendAT("AT+CIPSTART=\"TCP\",\""+url+"\","+port,1000)
             last_cmd_successful=waitResponse("WELCOME")
             bigiot_connected=last_cmd_successful
             //登录后开始监听网站发来的命令
