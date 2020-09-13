@@ -2,7 +2,7 @@
  * MakeCode extension for ESP8266 Wifi modules 
  */
 //% color=#de0423 icon="\uf1ee" block="ESP8266"
-declare const enum DateTimeFormat {
+enum DateTimeFormat {
     DateSimple = "Ymd",   // 日期类型
     TimeSimple = "His",   //时间类型
     Date = "Y-m-d", // 日期类型
@@ -10,6 +10,8 @@ declare const enum DateTimeFormat {
     DateTimeStamp="stamp",
     DateTime="Y-m-d H:i:s",
 }
+
+
 namespace ESP8266 {
     let listener:boolean=false //监听网站发来命令的信号量
     let last_cmd_successful: boolean =false
@@ -254,7 +256,7 @@ namespace ESP8266 {
     */
     //% block="查询服务器日期/时间|格式：%format"
     //% format.defl=DateTimeFormat.Date
-    export function BigiotCheckServerDate(format:string =DateTimeFormat.Date): void {
+    export function BigiotCheckServerDate(format:string): void {
         if(listener){
             listener=false//关闭监听
             let cmd:string="{\"M\":\"time\",\"F\":\""+format+"\"}\n"
