@@ -147,10 +147,7 @@ namespace ESP8266 {
             sendAT("AT+CIPSEND="+cmd.length)
             sendCMD(cmd)
             listener=true//开启监听
-        }else{
-            basic.showString("b")
         }
-        
     }
      /**
     * Bigiot设备退出登录
@@ -190,8 +187,6 @@ namespace ESP8266 {
             sendCMD(cmd)
             last_cmd_successful=waitResponse("SEND OK",500)
             listener=true//开启监听
-        }else{
-            basic.showString("b")
         }
         
     }
@@ -208,8 +203,6 @@ namespace ESP8266 {
             sendCMD(cmd)
             last_cmd_successful=waitResponse("SEND OK",500)
             listener=true//开启监听
-        }else{
-            basic.showString("b")
         }
     }
 
@@ -239,8 +232,6 @@ namespace ESP8266 {
                     break
                 }
             }
-        }else{
-            basic.showString("b")
         }
         return result
     }
@@ -264,8 +255,6 @@ namespace ESP8266 {
             sendCMD(cmd)
             last_cmd_successful=waitforTime(1000)
             listener=true//开启监听
-        }else{
-            basic.showString("b")
         }
     }
     /**
