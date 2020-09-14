@@ -142,6 +142,7 @@ namespace ESP8266 {
             let cmd:string="{\"M\":\"beat\"}\n"
             sendAT("AT+CIPSEND="+cmd.length)
             sendCMD(cmd)
+            last_cmd_successful=!waitResponse("ERROR",500)
             listener=true//开启监听
         }
     }
