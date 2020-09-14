@@ -95,17 +95,13 @@ namespace ESP8266 {
 			//取前200个字符
             if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
             //如果返回中有等待的信息
-            if (serial_str.includes(waitForWords) ) {
+            if (serial_str.includes(waitForWords)) {
                 basic.pause(500)
                 result = true
                 break
-			//如失败
-            } else if (serial_str.includes("ERROR") || serial_str.includes("FAIL")) {
-                basic.showString("E")
-                break
             }
-            if (input.runningTime() - time > timeout) {
-                basic.showString("t")
+			if (input.runningTime() - time > timeout) {
+                // basic.showString("t")
                 break
             }
         }
