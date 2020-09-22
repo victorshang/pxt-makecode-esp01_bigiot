@@ -10,7 +10,8 @@
         "README.md",
         "main.ts",
         "esp01_bigiot.ts",
-        "esp8266.ts"
+        "esp8266.ts",
+        "bigiot.ts"
     ],
     "testFiles": [
         "test.ts"
