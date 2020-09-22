@@ -30,7 +30,14 @@ namespace Bigiot_net {
         else
             return ""
     }
-    
+     /**
+    *检查最近一步操作是否成功?
+    */
+    //% block="最近一步操作是否成功?"
+    export function isLastCmdSuccessful():boolean {
+        return last_cmd_successful
+    }
+
     /**
     * 读取串口数据，判断是否存在某个特定表示成功字符串，默认等待时间为10s，失败字符串为"ERROR"、"FAIL"
     */
