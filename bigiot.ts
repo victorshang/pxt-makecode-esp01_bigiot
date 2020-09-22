@@ -1,7 +1,8 @@
 /**
  * MakeCode extension for Bigiot.net 
  */
-//% color=#35e3af icon="\uf1ef" block="Bigiot.net"
+//% color=#35e3af icon="\uf1ec" block="Bigiot_net"
+
 enum DateTimeFormat {
     DateSimple = 0,  
     TimeSimple = 1, 
@@ -17,7 +18,6 @@ namespace Bigiot_net {
     let last_cmd_successful: boolean =false
     let serverTime: string=""
     let last_cmd: string =""
-    let wifi_connected:boolean = false
     let bigiot_connected:boolean = false
 
     //截取子串
@@ -31,14 +31,13 @@ namespace Bigiot_net {
             return ""
     }
     
-   
     /**
-    * 读取串口数据，判断是否存在某个特定表示成功字符串，默认等待时间为30s，失败字符串为"ERROR"、"FAIL"
+    * 读取串口数据，判断是否存在某个特定表示成功字符串，默认等待时间为10s，失败字符串为"ERROR"、"FAIL"
     */
     //% block="存在表示成功的字符串|字符串 = %waitForWords|超时 %timeout"
     //% waitForWords.defl="string"
     //% timeout.defl=30000
-    function waitResponse(waitForWords : string,timeout : number=30000): boolean {
+    function waitResponse(waitForWords : string,timeout : number=10000): boolean {
         let serial_str: string = ""
         let result: boolean = false
         let time: number = input.runningTime()
@@ -59,22 +58,20 @@ namespace Bigiot_net {
         return result
     }
     /**
-    * 连接到Bigiot服务器
+    * 连接到Bigiot.net服务器，时限为10s，是否成功可以从"已连到Bigiot服务器"中获取。
     */
     //% block="Bigiot连接到服务器|域名或IP地址 = %url|端口 = %port"
     //% url.defl=www.bigiot.net
     //% port.defl=8181
     export function connectToBigiotServer(url: string="www.bigiot.net", port: number=8181) {
-        if(wifi_connected){
-            ESP8266.sendAT("AT+CIPSTART=\"TCP\",\""+url+"\","+port,1000)
-            last_cmd_successful=waitResponse("WELCOME")
-            bigiot_connected=last_cmd_successful
-            //登录后开始监听网站发来的命令
-            listener=true
-        }else{
-            basic.showString("u")
-        }
+        //默认已经连接上了WIFI
+        ESP8266.sendAT("AT+CIPSTART=\"TCP\",\""+url+"\","+port,1000)
+        last_cmd_successful=waitResponse("WELCOME",10000)
+        bigiot_connected=last_cmd_successful
+        //登录后开始监听网站发来的命令
+        listener=true
     }
+
     /**
     *检查ESP8266是否连接到了Bigiot服务器
     */
@@ -84,9 +81,9 @@ namespace Bigiot_net {
     }
 
     /**
-    * 发送Bigiot心跳包
+    * Bigiot发送心跳包
     */
-    //% block="发送Bigiot心跳包"
+    //% block="Bigiot发送心跳包"
     export function BigiotBeat(): void {
         if(listener){
             listener=false//关闭监听
@@ -97,10 +94,14 @@ namespace Bigiot_net {
             listener=true//开启监听
         }
     }
+
+
      /**
     * Bigiot设备退出登录
     */
     //% block="Bigiot设备强制下线|设备ID %DID|APIKey %APIKey"
+    //DID.defl=0
+    //APIKey.defl=0
     export function BigiotCheckout(DID: string, APIKey: string): void {
         listener=false//关闭监听
         let cmd:string="{\"M\":\"checkout\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
@@ -109,11 +110,13 @@ namespace Bigiot_net {
         last_cmd_successful=waitResponse("checkout",2000)
         listener=true//开启监听
     }
+
     /**
     * Bigiot设备登录
     */
     //% block="Bigiot设备登录|设备ID %DID|APIKey %APIKey"
-
+    //DID.defl=0
+    //APIKey.defl=0
     export function BigiotCheckin(DID: string, APIKey: string): void {
         listener=false//关闭监听
         let cmd:string="{\"M\":\"checkin\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
@@ -122,6 +125,8 @@ namespace Bigiot_net {
         last_cmd_successful=waitResponse("checkinok",2000)
         listener=true//开启监听
     }
+
+
     /**
     * Bigiot发送一项实时数据
     */
@@ -157,7 +162,7 @@ namespace Bigiot_net {
     /**
     * 读取串口数据，判断是否存在Bigiot命令词，默认读取时长为3s
     */
-    //% block="检查Bigiot是否发来命令|超时:%timeout"
+    //% block="不断读取串口，检查Bigiot是否发来命令|时长:%timeout"
     //% timeout.defl=3000
     export function waitforCommand(timeout : number=3000): boolean {
         let serial_str: string = ""
@@ -183,6 +188,7 @@ namespace Bigiot_net {
         }
         return result
     }
+
     /**
     *最新Bigiot发来的命令词
     */
@@ -205,6 +211,7 @@ namespace Bigiot_net {
             listener=true//开启监听
         }
     }
+
     /**
     *最近一次获取的服务器时间戳
     */
@@ -230,7 +237,6 @@ namespace Bigiot_net {
 			//如超过时长
             }
             if (input.runningTime() - time > timeout) {
-                basic.showString("t")
                 break
             }
         }

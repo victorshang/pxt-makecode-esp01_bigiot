@@ -4,7 +4,6 @@
 //% color=#de0423 icon="\uf1ee" block="ESP8266"
 
 namespace ESP8266 {
-    let listener:boolean=false //监听网站发来命令的信号量
     let last_cmd_successful: boolean =false
     let serverTime: string=""
     let last_cmd: string =""
@@ -21,16 +20,6 @@ namespace ESP8266 {
         basic.pause(wait)
     }
 
-    //截取子串
-    function subStr(value: string,beginStr:string,endStr:string): string {
-        let begin = value.indexOf(beginStr)
-        let end = value.indexOf(endStr)
-        if (begin != -1 && end != -1) {
-            return value.substr(begin + beginStr.length, end - begin -  beginStr.length)
-        }
-        else
-            return ""
-    }
     /**
     * 初始化 ESP8266 模块，使用穿透模式连接到Wifi
     */
@@ -68,16 +57,16 @@ namespace ESP8266 {
     *检查最近的一步ESP8266是否成功
     */
     //% block="上一步操作是否成功?"
-    export function isLastCmdSuccessful() {
+    function isLastCmdSuccessful() {
         return last_cmd_successful
     }
     /**
-    * 读取串口数据，判断是否存在某个特定表示成功字符串，默认等待时间为30s，失败字符串为"ERROR"、"FAIL"
+    * 读取串口数据，判断是否存在某个特定表示成功字符串，默认等待时间为10s，失败字符串为"ERROR"、"FAIL"
     */
     //% block="存在表示成功的字符串|字符串 = %waitForWords|超时 %timeout"
     //% waitForWords.defl="string"
     //% timeout.defl=30000
-    function waitResponse(waitForWords : string,timeout : number=30000): boolean {
+    function waitResponse(waitForWords : string,timeout : number=10000): boolean {
         let serial_str: string = ""
         let result: boolean = false
         let time: number = input.runningTime()
