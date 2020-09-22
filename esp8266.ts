@@ -30,6 +30,7 @@ namespace ESP8266 {
     //% pw.defl=Password
     export function connectWifi(tx: SerialPin, rx: SerialPin, baudrate: BaudRate, ssid: string, pw: string) {
         wifi_connected = false
+        basic.pause(1000)    
         serial.redirect(
             tx,
             rx,
