@@ -1,6 +1,6 @@
 {
     "name": "makecode esp01_bigiot",
-    "version": "1.0.0",
+    "version": "0.0.17",
     "description": "",
     "dependencies": {
         "core": "*",
