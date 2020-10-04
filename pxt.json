@@ -12,9 +12,7 @@
         "esp8266.ts",
         "bigiot.ts"
     ],
-    "testFiles": [
-        "test.ts"
-    ],
+    "testFiles": [],
     "public": false,
     "supportedTargets": [
         "microbit"

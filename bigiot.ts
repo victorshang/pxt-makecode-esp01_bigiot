@@ -1,5 +1,8 @@
 /**
  * MakeCode extension for Bigiot.net 
+ * 
+ * update: 2020-10-4
+ * version:1.01
  */
 //% color=#35e3af icon="\uf1ec" block="Bigiot_net"
 
@@ -70,7 +73,7 @@ namespace Bigiot_net {
     //% block="Bigiot连接到服务器|域名或IP地址 = %url|端口 = %port"
     //% url.defl=www.bigiot.net
     //% port.defl=8181
-    export function connectToBigiotServer(url: string="www.bigiot.net", port: number=8181) {
+    export function connectToBigiotServer(url: string="www.bigiot.net", port: number=8181):void {
         //默认已经连接上了WIFI
         ESP8266.sendAT("AT+CIPSTART=\"TCP\",\""+url+"\","+port,1000)
         last_cmd_successful=waitResponse("WELCOME",10000)
@@ -83,7 +86,7 @@ namespace Bigiot_net {
     *检查ESP8266是否连接到了Bigiot服务器
     */
     //% block="已连接到Bigiot服务器"
-    export function isBigiotConnected() {
+    export function isBigiotConnected():boolean {
         return bigiot_connected
     }
 
@@ -91,7 +94,7 @@ namespace Bigiot_net {
     * Bigiot发送心跳包
     */
     //% block="Bigiot发送心跳包"
-    export function BigiotBeat(): void {
+    export function sendBigiotBeat(): void {
         if(listener){
             listener=false//关闭监听
             let cmd:string="{\"M\":\"beat\"}\n"
@@ -109,7 +112,7 @@ namespace Bigiot_net {
     //% block="Bigiot设备强制下线|设备ID %DID|APIKey %APIKey"
     //DID.defl=0
     //APIKey.defl=0
-    export function BigiotCheckout(DID: string, APIKey: string): void {
+    export function checkoutBigiot(DID: string, APIKey: string): void {
         listener=false//关闭监听
         let cmd:string="{\"M\":\"checkout\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
@@ -124,7 +127,7 @@ namespace Bigiot_net {
     //% block="Bigiot设备登录|设备ID %DID|APIKey %APIKey"
     //DID.defl=0
     //APIKey.defl=0
-    export function BigiotCheckin(DID: string, APIKey: string): void {
+    export function checkinBigiot(DID: string, APIKey: string): void {
         listener=false//关闭监听
         let cmd:string="{\"M\":\"checkin\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
@@ -139,7 +142,7 @@ namespace Bigiot_net {
     */
     //% block="发送实时数据|设备ID %DID|接口ID %IID|接口值 %value" blockExternalInputs=true
     //更新一项数据
-    export function BigiotUpdate1(DID: string, IID: string, value: string): void {
+    export function updateBigiot1(DID: string, IID: string, value: string): void {
         if(listener){
             listener=false//关闭监听
             let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID + "\":\"" + value + "\"}}\n" 
@@ -155,7 +158,7 @@ namespace Bigiot_net {
     */
     //% block="发送实时数据|设备ID %DID|接口1ID %IID1|接口1值 %value1|接口2ID %IID2|接口2值 %value2" blockExternalInputs=true
     //更新两项数据
-    export function BigiotUpdate2(DID: string, IID1: string, value1: string, IID2: string, value2: string): void {
+    export function updateBigiot2(DID: string, IID1: string, value1: string, IID2: string, value2: string): void {
         if(listener){
             listener=false//关闭监听
             let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID1 + "\":\"" + value1 + "\",\"" + IID2 + "\":\"" + value2 + "\"}}\n" 
@@ -200,7 +203,7 @@ namespace Bigiot_net {
     *最新Bigiot发来的命令词
     */
     //% block="最新Bigiot发来的命令词"
-    export function lastCmd() {
+    export function lastCmd():string {
         return last_cmd
     }
     /**
@@ -208,7 +211,7 @@ namespace Bigiot_net {
     */
     //% block="获取服务器日期/时间|格式：%format"
     //% format.defl=DateTimeFormat.DateTime
-    export function BigiotCheckServerDate(format:DateTimeFormat): void {
+    export function checkServerDateBigiot(format:DateTimeFormat): void {
         if(listener){
             listener=false//关闭监听
             let cmd:string="{\"M\":\"time\",\"F\":\""+DateTimeFormats[format]+"\"}\n"
@@ -223,7 +226,7 @@ namespace Bigiot_net {
     *最近一次获取的服务器时间戳
     */
     //% block="最近一次获取的服务器时间戳"
-    export function lastServerTime() {
+    export function lastServerTime():string {
         return serverTime
     }
 

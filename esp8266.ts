@@ -1,5 +1,7 @@
 /**
  * MakeCode extension for ESP8266 Wifi modules 
+ * update: 2020-10-4
+ * version:1.00
  */
 //% color=#de0423 icon="\uf1ee" block="ESP8266"
 
