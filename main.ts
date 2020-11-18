@@ -3,10 +3,7 @@ let sleeptime=5000
 let next=0
 basic.pause(2000)
 basic.showIcon(IconNames.Heart)
-ESP8266.connectWifi(SerialPin.P2, SerialPin.P1, BaudRate.BaudRate115200, "Redmi_Mini", "0987654323")
-while (!ESP8266.isWifiConnected()) {
-    basic.pause(100)
-}
+ESP8266.connectWifi(SerialPin.P2, SerialPin.P1, BaudRate.BaudRate115200, "MERCURY_Mini", "0987654323")
 basic.showString("W")
 Bigiot_net.connectToBigiotServer("www.bigiot.net", 8181)
 basic.showString("L")

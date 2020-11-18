@@ -44,7 +44,7 @@ namespace ESP8266 {
         last_cmd_successful= waitResponse("OK")
         sendAT("AT+RST", 2000) // 重启
         last_cmd_successful= waitResponse("OK")
-        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + pw + "\"",1000) // 连接到WIFI
+        sendAT("AT+CWJAP_CUR=\"" + ssid + "\",\"" + pw + "\"",1000) // 连接到WIFI
         last_cmd_successful= waitResponse("OK",30000)
         wifi_connected =last_cmd_successful
         basic.pause(100)
