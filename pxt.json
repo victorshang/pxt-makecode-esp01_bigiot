@@ -1,6 +1,6 @@
 {
     "name": "ESP01 & www.Bigiot.com IOT",
-    "version": "3.0.3",
+    "version": "3.0.4",
     "description": "",
     "dependencies": {
         "core": "*"
