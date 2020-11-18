@@ -174,10 +174,11 @@ namespace Bigiot_net {
     */
     //% block="不断读取串口，检查Bigiot是否发来命令|时长:%timeout"
     //% timeout.defl=3000
-    export function waitforCommand(timeout : number=3000): boolean {
+    export function waitforCommand(timeout : number=500): boolean {
         let serial_str: string = ""
         let result: boolean = false 
         if(listener){
+            listener=false//关闭监听
             let time: number = input.runningTime()
             while (true) {
                 serial_str += serial.readString()
@@ -195,6 +196,7 @@ namespace Bigiot_net {
                     break
                 }
             }
+            listener=true//开启监听
         }
         return result
     }
