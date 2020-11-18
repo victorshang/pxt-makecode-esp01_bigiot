@@ -11,11 +11,22 @@ basic.showString("L")
 Bigiot_net.checkoutBigiot("12844", "fb0b41e34")
 basic.showString("O")
 Bigiot_net.checkinBigiot("12844", "fb0b41e34")
-basic.showString("I")
-basic.forever(function on_forever() {
-    
-    basic.pause(200)
-    if (Bigiot_net.waitforCommand(3000)) {
+if(Bigiot_net.isLastCmdSuccessful()){
+    basic.showString("I")
+}
+
+basic.forever(function on_forever2() {
+    basic.showLeds(`
+        . . # . .
+        . . . # .
+        # # # # #
+        . . . # .
+        . . # . .
+        `)
+    basic.clearScreen()
+    Bigiot_net.updateBigiot2("12844", "11251", convertToText(input.acceleration(Dimension.Y)), "11345", convertToText(input.acceleration(Dimension.X)))
+    basic.pause(5000)
+    if (Bigiot_net.getCommand(500)) {
         命令 = Bigiot_net.lastCmd()
         basic.showString(Bigiot_net.lastCmd(), 50)
         if (命令 == "on") {
@@ -40,17 +51,4 @@ basic.forever(function on_forever() {
         }
         
     }
-    
-})
-basic.forever(function on_forever2() {
-    basic.showLeds(`
-        . . # . .
-        . . . # .
-        # # # # #
-        . . . # .
-        . . # . .
-        `)
-    basic.clearScreen()
-    Bigiot_net.updateBigiot2("12844", "11251", convertToText(input.acceleration(Dimension.Y)), "11345", convertToText(input.acceleration(Dimension.X)))
-    basic.pause(5000)
 })

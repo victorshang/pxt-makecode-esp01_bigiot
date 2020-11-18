@@ -62,7 +62,6 @@ namespace Bigiot_net {
             if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
             //如果返回中有等待的信息
             if (serial_str.includes(waitForWords)) {
-                basic.pause(500)
                 result = true
                 break
             }
@@ -84,7 +83,7 @@ namespace Bigiot_net {
         last_cmd_successful=waitResponse("WELCOME",BIGIOT_WELCOME_CHECK_TIMEOUT)
         bigiot_connected=last_cmd_successful
         //登录后开始监听网站发来的命令
-        listener=true  //释放信号量
+        //listener=true  //释放信号量
     }
 
     /**
@@ -100,15 +99,10 @@ namespace Bigiot_net {
     */
     //% block="Bigiot发送心跳包"
     export function sendBigiotBeat(): void {
-        while(~listener){ //等待释放信号量
-            control.waitMicros(10)
-        }
-        listener=false//占有信号量
         let cmd:string="{\"M\":\"beat\"}\n"
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
         last_cmd_successful=!waitResponse("ERROR",IO_CHECK_TIMEOUT)
-        listener=true//释放信号量
     }
 
 
@@ -119,15 +113,10 @@ namespace Bigiot_net {
     //DID.defl=0
     //APIKey.defl=0
     export function checkoutBigiot(DID: string, APIKey: string): void {
-        while(~listener){ //等待释放信号量
-            control.waitMicros(10)
-        }
-        listener=false    //占有信号量
         let cmd:string="{\"M\":\"checkout\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
         last_cmd_successful=waitResponse("checkout",BIGIOT_CHECK_TIMEOUT)
-        listener=true    //释放信号量
     }
 
     /**
@@ -137,15 +126,10 @@ namespace Bigiot_net {
     //DID.defl=0
     //APIKey.defl=0
     export function checkinBigiot(DID: string, APIKey: string): void {
-        while(~listener){ //等待释放信号量
-            control.waitMicros(10)
-        }
-        listener=false    //占有信号量
         let cmd:string="{\"M\":\"checkin\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
         last_cmd_successful=waitResponse("checkinok",BIGIOT_CHECK_TIMEOUT)
-        listener=true    //释放信号量
     }
 
 
@@ -155,15 +139,10 @@ namespace Bigiot_net {
     //% block="发送实时数据|设备ID %DID|接口ID %IID|接口值 %value" blockExternalInputs=true
     //更新一项数据
     export function updateBigiot1(DID: string, IID: string, value: string): void {
-        while(~listener){ //等待释放信号量
-            control.waitMicros(10)
-        }
-        listener=false    //占有信号量
         let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID + "\":\"" + value + "\"}}\n" 
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
         last_cmd_successful=waitResponse("SEND OK",IO_CHECK_TIMEOUT)
-        listener=true     //释放信号量
     }
     /**
     * Bigiot发送两项实时数据
@@ -171,15 +150,10 @@ namespace Bigiot_net {
     //% block="发送实时数据|设备ID %DID|接口1ID %IID1|接口1值 %value1|接口2ID %IID2|接口2值 %value2" blockExternalInputs=true
     //更新两项数据
     export function updateBigiot2(DID: string, IID1: string, value1: string, IID2: string, value2: string): void {
-        while(~listener){ //等待释放信号量
-            control.waitMicros(10)
-        }
-        listener=false    //占有信号量
         let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID1 + "\":\"" + value1 + "\",\"" + IID2 + "\":\"" + value2 + "\"}}\n" 
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
-        last_cmd_successful=waitResponse("SEND OK",IO_CHECK_TIMEOUT)
-        listener=true     //释放信号量
+        //last_cmd_successful=waitResponse("SEND OK",IO_CHECK_TIMEOUT)
     }
 
     /**
@@ -187,31 +161,25 @@ namespace Bigiot_net {
     */
     //% block="不断读取串口，检查Bigiot是否发来命令|时长:%timeout"
     //% timeout.defl=3000
-    export function waitforCommand(timeout : number=3000): boolean {
+    export function getCommand(timeout : number=3000): boolean {
         let serial_str: string = ""
         let result: boolean = false 
-        while(~listener){ //等待释放信号量
-            control.waitMicros(10)
-        }
-        listener=false    //占有信号量
         let time: number = input.runningTime()
         while (true) {
                 serial_str += serial.readString()
-                if(serial_str.length>0){
-			        //如果返回中有命令词
-                    let temp_str:string=subStr(serial_str,"\"C\":\"","\",\"T\"")
-                    if (temp_str.compare("")!=0) {
-                        last_cmd=temp_str
-                        result = true
+                //取前200个字符
+                if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
+    	        //如果返回中有命令词
+                let temp_str:string=subStr(serial_str,"\"C\":\"","\",\"T\"")
+                if (temp_str.compare("")!=0) {
+                    last_cmd=temp_str
+                    result = true
                     break
-			        //如超过时长
-                    }
                 }
                 if (input.runningTime() - time > timeout) {
                     break
                 }
         }
-        listener=true     //释放信号量
         return result
     }
 
@@ -230,15 +198,10 @@ namespace Bigiot_net {
     //% block="获取服务器日期/时间|格式：%format"
     //% format.defl=DateTimeFormat.DateTime
     export function checkServerDateBigiot(format:DateTimeFormat): void {
-        while(~listener){ //等待释放信号量
-            control.waitMicros(10)
-        }
-        listener=false    //占有信号量
         let cmd:string="{\"M\":\"time\",\"F\":\""+DateTimeFormats[format]+"\"}\n"
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
         last_cmd_successful=waitforServerTime(BIGIOT_SERVERTIME_TIMEOUT)
-        listener=true     //释放信号量
     }
 
     /**
