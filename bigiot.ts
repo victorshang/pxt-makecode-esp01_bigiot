@@ -23,7 +23,7 @@ namespace Bigiot_net {
     let last_cmd: string =""
     let bigiot_connected:boolean = false
     const IO_CHECK_TIMEOUT =500
-    const BIGIOT_CHECK_TIMEOUT =2000
+    const BIGIOT_CHECK_TIMEOUT =5000
     const BIGIOT_SERVERTIME_TIMEOUT =1000
     const BIGIOT_WELCOME_CHECK_TIMEOUT=10000 //等待连接超时时间
     //const BIGIOT_CHECKIN_OUT_CHECK_TIMEOUT=10000 //等待连接超时时间
