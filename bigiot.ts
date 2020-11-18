@@ -15,9 +15,9 @@ enum DateTimeFormat {
     DateTime = 5
 }
 let DateTimeFormats=["Ymd","His","Y-m-d","H:i:s","stamp","Y-m-d H:i:s"]
+let listener:boolean=false //监听网站发来命令的信号量
 
-namespace Bigiot_net {
-    let listener:boolean=false //监听网站发来命令的信号量
+namespace Bigiot_net {  
     let last_cmd_successful: boolean =false
     let serverTime: string=""
     let last_cmd: string =""
@@ -197,15 +197,15 @@ namespace Bigiot_net {
         let time: number = input.runningTime()
         while (true) {
                 serial_str += serial.readString()
-			    //取前的200个字符
-                if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
-			    //如果返回中有命令词
-                let temp_str:string=subStr(serial_str,"\"C\":\"","\",\"T\"")
-                if (temp_str.compare("")!=0) {
-                    last_cmd=temp_str
-                    result = true
+                if(serial_str.length>0){
+			        //如果返回中有命令词
+                    let temp_str:string=subStr(serial_str,"\"C\":\"","\",\"T\"")
+                    if (temp_str.compare("")!=0) {
+                        last_cmd=temp_str
+                        result = true
                     break
-			    //如超过时长
+			        //如超过时长
+                    }
                 }
                 if (input.runningTime() - time > timeout) {
                     break
