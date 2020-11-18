@@ -142,7 +142,7 @@ namespace Bigiot_net {
         let cmd:string="{\"M\":\"update\",\"ID\":\"" + DID + "\",\"V\":{\"" + IID + "\":\"" + value + "\"}}\n" 
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
-        last_cmd_successful=waitResponse("SEND OK",IO_CHECK_TIMEOUT)
+        //last_cmd_successful=waitResponse("SEND OK",IO_CHECK_TIMEOUT)
     }
     /**
     * Bigiot发送两项实时数据
@@ -170,6 +170,11 @@ namespace Bigiot_net {
                 //取前200个字符
                 if (serial_str.length > 200) serial_str = serial_str.substr(serial_str.length - 200)
     	        //如果返回中有命令词
+                if (serial_str.includes("ERROR")) {
+                    last_cmd="ERROR"
+                    result = true
+                    break
+                }
                 let temp_str:string=subStr(serial_str,"\"C\":\"","\",\"T\"")
                 if (temp_str.compare("")!=0) {
                     last_cmd=temp_str
