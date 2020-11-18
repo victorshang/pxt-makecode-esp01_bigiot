@@ -10,7 +10,8 @@
         "README.md",
         "main.ts",
         "esp8266.ts",
-        "bigiot.ts"
+        "bigiot.ts",
+        "main.py"
     ],
     "testFiles": [],
     "public": false,
