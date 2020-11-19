@@ -7,10 +7,8 @@
     },
     "files": [
         "README.md",
-        "main.ts",
         "esp8266.ts",
-        "bigiot.ts",
-        "main.py"
+        "bigiot.ts"
     ],
     "testFiles": [],
     "public": false,

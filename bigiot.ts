@@ -72,7 +72,8 @@ namespace Bigiot_net {
         return result
     }
     /**
-    * 连接到Bigiot.net服务器，时限为10s，是否成功可以从"已连到Bigiot服务器"中获取，同时释放信号量。
+    * 连接到Bigiot.net服务器，时限为10s，是否成功可以从"已连到Bigiot服务器"中获取，
+    * 判别的条件为：是否接受到BIGIOT发出的 {"M":"WELCOME TO BIGIOT"}
     */
     //% block="Bigiot连接到服务器|域名或IP地址 = %url|端口 = %port"
     //% url.defl=www.bigiot.net
@@ -82,8 +83,6 @@ namespace Bigiot_net {
         ESP8266.sendAT("AT+CIPSTART=\"TCP\",\""+url+"\","+port,IO_CHECK_TIMEOUT)
         last_cmd_successful=waitResponse("WELCOME",BIGIOT_WELCOME_CHECK_TIMEOUT)
         bigiot_connected=last_cmd_successful
-        //登录后开始监听网站发来的命令
-        //listener=true  //释放信号量
     }
 
     /**
@@ -96,6 +95,7 @@ namespace Bigiot_net {
 
     /**
     * Bigiot发送心跳包
+    * 判别的条件为：是否接受到 ESP01发出的 
     */
     //% block="Bigiot发送心跳包"
     export function sendBigiotBeat(): void {
@@ -108,6 +108,7 @@ namespace Bigiot_net {
 
      /**
     * Bigiot设备退出登录
+    * 判别的条件为：是否接受到 ESP01发出的 SEND OK
     */
     //% block="Bigiot设备强制下线|设备ID %DID|APIKey %APIKey"
     //DID.defl=0
@@ -116,11 +117,12 @@ namespace Bigiot_net {
         let cmd:string="{\"M\":\"checkout\", \"ID\":\"" + DID + "\", \"K\":\"" + APIKey + "\"}\n"
         ESP8266.sendAT("AT+CIPSEND="+cmd.length)
         ESP8266.sendCMD(cmd)
-        last_cmd_successful=waitResponse("checkout",BIGIOT_CHECK_TIMEOUT)
+        last_cmd_successful=waitResponse("SEND OK",IO_CHECK_TIMEOUT)
     }
 
     /**
     * Bigiot设备登录
+    * 判别的条件为：是否接受到 BIGIOT 发出的 checkinok
     */
     //% block="Bigiot设备登录|设备ID %DID|APIKey %APIKey"
     //DID.defl=0
@@ -135,6 +137,7 @@ namespace Bigiot_net {
 
     /**
     * Bigiot发送一项实时数据
+    * 不判别是否成功
     */
     //% block="发送实时数据|设备ID %DID|接口ID %IID|接口值 %value" blockExternalInputs=true
     //更新一项数据
@@ -146,6 +149,7 @@ namespace Bigiot_net {
     }
     /**
     * Bigiot发送两项实时数据
+    * 不判别是否成功
     */
     //% block="发送实时数据|设备ID %DID|接口1ID %IID1|接口1值 %value1|接口2ID %IID2|接口2值 %value2" blockExternalInputs=true
     //更新两项数据
